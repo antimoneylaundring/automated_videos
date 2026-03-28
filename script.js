@@ -148,52 +148,72 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
 // --- 2. Download by filename (only file name, force download + page reload) ---
 document.getElementById("downloadBtn").addEventListener("click", async () => {
     const filePathInput = document.getElementById("filePathInput");
-    const rawFileName = filePathInput.value.trim();
+    const raw = filePathInput.value;
 
-    if (!rawFileName) {
-        downloadStatus.textContent = "Please enter a file name (e.g. myvideo.mp4).";
+    // Split by newlines, trim each line
+    const fileNames = raw
+        .split("\n")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+    if (fileNames.length === 0) {
+        downloadStatus.textContent = "Please enter at least one file name, one per line.";
         downloadStatus.className = "status error";
         return;
     }
 
-    const filePath = `uploads/${rawFileName}`;
+    downloadStatus.textContent = "Preparing ZIP, please wait...";
+    downloadStatus.className = "status";
 
     try {
-        const { data, error } = supabase.storage
-            .from(BUCKET_NAME)
-            .getPublicUrl(filePath);
+        const zip = new JSZip();
+        let successCount = 0;
+        let failCount = 0;
 
-        if (error) {
-            downloadStatus.textContent = "Failed to get URL: " + error.message;
+        for (const name of fileNames) {
+            const filePath = `uploads/${name}`;
+
+            const { data, error } = supabase.storage
+                .from(BUCKET_NAME)
+                .getPublicUrl(filePath);
+
+            if (error) {
+                console.error("Failed to get URL for", name, error);
+                failCount++;
+                continue;
+            }
+
+            const downloadUrl = data.publicUrl;
+            const res = await fetch(downloadUrl);
+            if (!res.ok) {
+                console.error("Failed to fetch", name, res.status, res.statusText);
+                failCount++;
+                continue;
+            }
+
+            const blob = await res.blob();
+            zip.file(name, blob);
+            successCount++;
+        }
+
+        if (successCount === 0) {
+            downloadStatus.textContent = "No files could be added to ZIP. Check names.";
             downloadStatus.className = "status error";
-            console.error(error);
             return;
         }
 
-        const downloadUrl = data.publicUrl;
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const zipName = `Video_${yyyy}-${mm}-${dd}.zip`;
 
-        const res = await fetch(downloadUrl);
-        if (!res.ok) {
-            throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
-        }
+        const zipBlob = await zip.generateAsync({ type: "blob" }); // [web:100][web:102]
+        saveAs(zipBlob, zipName); // [web:100][web:102]
 
-        const blob = await res.blob();
-        const blobUrl = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = rawFileName;
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-
-        downloadStatus.textContent = "Download started... Page will refresh.";
+        downloadStatus.textContent = `ZIP download started (${successCount} file(s), ${failCount} failed).`;
         downloadStatus.className = "status success";
 
-        // Refresh page after download is triggered
         setTimeout(() => window.location.reload(), 800);
     } catch (err) {
         downloadStatus.textContent = "Download error: " + err.message;
