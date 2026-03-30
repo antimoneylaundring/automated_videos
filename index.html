@@ -11,48 +11,55 @@
 <body>
 
     <div class="container">
-
         <header>
             <h1>Automated Videos</h1>
         </header>
-
         <!-- LEFT: Upload + Download -->
         <div>
             <section class="card">
-                <h2>Upload Video</h2>
-                <div class="form-group">
-                    <label for="videoInput">Choose video file</label>
-                    <input type="file" id="videoInput" accept="video/*" multiple />
-                </div>
-                <button id="uploadBtn">Upload to Supabase</button>
+                <div class="stats-grid">
+                    <div>
+                        <h2 style="text-align: center;">Video Count</h2>
+                        <div>
+                            <div class="stat-item">
+                                <div id="totalCount" class="stat-number">0</div>
+                                <div class="stat-label">Total Videos</div>
+                            </div>
+                        </div>
 
-                <!-- Progress bar -->
-                <div class="progress-wrapper">
-                    <div class="progress-bar-container">
-                        <div id="progressBar"></div>
+                    </div>
+                    <div>
+                        <h2>Upload Video</h2>
+                        <div class="form-group">
+                            <label for="videoInput">Choose video file</label>
+                            <input type="file" id="videoInput" accept="video/*" multiple />
+                        </div>
+                        <button id="uploadBtn">Upload</button>
+                        <div class="progress-wrapper">
+                            <div class="progress-bar-container">
+                                <div id="progressBar"></div>
+                            </div>
+                            <div id="progressText">Ready</div>
+                        </div>
+
+                        <div id="uploadStatus" class="status"></div>
                     </div>
                 </div>
-
-                <div id="uploadStatus" class="status"></div>
                 <hr>
-                <!-- </section>
-            
-            <section class="card"> -->
                 <h2>Download Video</h2>
                 <div class="form-group">
-                    <label for="filePathInput">File names (comma separated, e.g. a.mp4, b.mp4)</label>
-                    <!-- <input type="text" id="filePathInput" placeholder="a.mp4, b.mp4" /> -->
-                    <textarea id="filePathInput" placeholder="video1.mp4
-video2.mp4
-video3.mp4" style="
+                    <label for="filePathInput">File names (e.g. https://91appa.com, https://www.yolo247.site)</label>
+                    <textarea id="filePathInput" placeholder="https://91appa.com
+https://www.yolo247.site
+https://20370.rajaluckme.com" style="
     width:100%;
     height:120px;
     padding:10px 12px;
     border:1px solid #dee2e6;
     border-radius:6px;
     font-size:0.95rem;
-    resize:none;            /* not draggable */
-    overflow-y:auto;        /* vertical scrollbar when needed */
+    resize:none;
+    overflow-y:auto;
   "></textarea>
                 </div>
                 <button id="downloadBtn">Download Video</button>
@@ -62,25 +69,37 @@ video3.mp4" style="
 
         <!-- RIGHT: Stats + Search -->
         <div>
-            <section class="card">
-                <h2>Video Stats</h2>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div id="totalCount" class="stat-number">0</div>
-                        <div class="stat-label">Total Videos</div>
+            <section class="card stats-grid">
+                <div>
+                    <h2>Search Video</h2>
+                    <div class="form-group">
+                        <label for="searchInput">Search by filename</label>
+                        <!-- <input type="text" id="searchInput" placeholder="Enter filename..." /> -->
+                        <textarea id="searchInput" placeholder="https://91appa.com
+https://www.yolo247.site
+https://20370.rajaluckme.com" style="
+width:100%;
+height:120px;
+padding:10px 12px;
+border:1px solid #dee2e6;
+border-radius:6px;
+font-size:0.95rem;
+resize:none;
+overflow-y:auto;
+"></textarea>
                     </div>
+                    <button id="searchBtn">Search</button>
+                    <div id="searchResult" class="search-result" style="display:none;"></div>
                 </div>
-                <hr>
-                <!-- </section>
-
-            <section class="card"> -->
-                <h2>Search Video</h2>
-                <div class="form-group">
-                    <label for="searchInput">Search by filename</label>
-                    <input type="text" id="searchInput" placeholder="Enter filename..." />
+                <div>
+                    <h2>File Rename</h2>
+                    <div class="form-group">
+                        <label for="renameSearchInput">Search by filename</label>
+                        <input type="text" id="renameSearchInput" placeholder="Enter filename to search..." />
+                    </div>
+                    <button id="renameSearchBtn">Search</button>
+                    <div id="renameSearchResult" style="display:none; margin-top:12px;"></div>
                 </div>
-                <button id="searchBtn">Search</button>
-                <div id="searchResult" class="search-result" style="display:none;"></div>
             </section>
         </div>
         <footer style="text-align:center; margin-bottom: 20px; color:var(--text-muted); font-size:0.85rem;">
