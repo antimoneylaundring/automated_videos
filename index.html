@@ -14,20 +14,21 @@
         <header>
             <h1>Automated Videos</h1>
         </header>
-        <!-- LEFT: Upload + Download -->
+
+        <!-- LEFT: Video Count + Upload + File Rename -->
         <div>
             <section class="card">
                 <div class="stats-grid">
+                    <!-- Video Count -->
                     <div>
                         <h2 style="text-align: center;">Video Count</h2>
-                        <div>
-                            <div class="stat-item">
-                                <div id="totalCount" class="stat-number">0</div>
-                                <div class="stat-label">Total Videos</div>
-                            </div>
+                        <div class="stat-item">
+                            <div id="totalCount" class="stat-number">0</div>
+                            <div class="stat-label">Total Videos</div>
                         </div>
-
                     </div>
+
+                    <!-- Upload -->
                     <div>
                         <h2>Upload Video</h2>
                         <div class="form-group">
@@ -41,15 +42,31 @@
                             </div>
                             <div id="progressText">Ready</div>
                         </div>
-
                         <div id="uploadStatus" class="status"></div>
                     </div>
                 </div>
+
                 <hr>
-                <h2>Download Video</h2>
+
+                <!-- File Rename -->
+                <h2>File Rename</h2>
                 <div class="form-group">
-                    <label for="filePathInput">File names (e.g. https://91appa.com, https://www.yolo247.site)</label>
-                    <textarea id="filePathInput" placeholder="https://91appa.com
+                    <label for="renameSearchInput">Search by filename</label>
+                    <input type="text" id="renameSearchInput" placeholder="Enter filename to search..." />
+                </div>
+                <button id="renameSearchBtn">Search</button>
+                <div id="renameSearchResult" style="display:none; margin-top:12px;"></div>
+
+            </section>
+        </div>
+
+        <!-- RIGHT: Search & Download Merged -->
+        <div>
+            <section class="card">
+                <h2>Search & Download</h2>
+                <div class="form-group">
+                    <label for="searchInput">Enter URLs</label>
+                    <textarea id="searchInput" placeholder="https://91appa.com
 https://www.yolo247.site
 https://20370.rajaluckme.com" style="
     width:100%;
@@ -60,59 +77,50 @@ https://20370.rajaluckme.com" style="
     font-size:0.95rem;
     resize:none;
     overflow-y:auto;
-  "></textarea>
+"></textarea>
                 </div>
-                <button id="downloadBtn">Download Video</button>
-                <div id="downloadStatus" class="status"></div>
+                <button id="searchBtn">Search</button>
+
+                <div id="searchResult" style="display:none; margin-top:12px;"></div>
+
+                <!-- Action buttons shown after search -->
+                <div id="searchActions" style="display:none; margin-top:10px; gap:8px; flex-wrap:wrap;">
+                    <button id="downloadFoundBtn" style="
+                        padding: 8px 16px;
+                        background: #0d6efd;
+                        color: #fff;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        display: none;
+                    ">⬇ Download Found</button>
+
+                    <button id="exportExcelBtn" style="
+                        padding: 8px 16px;
+                        background: #1d6f42;
+                        color: #fff;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        display: none;
+                    ">📊 Export Not Found to CSV</button>
+                </div>
+
+                <div id="mergedDownloadStatus" class="status" style="margin-top:8px;"></div>
+
             </section>
         </div>
 
-        <!-- RIGHT: Stats + Search -->
-        <div>
-            <section class="card stats-grid">
-                <div>
-                    <h2>Search Video</h2>
-                    <div class="form-group">
-                        <label for="searchInput">Search by filename</label>
-                        <!-- <input type="text" id="searchInput" placeholder="Enter filename..." /> -->
-                        <textarea id="searchInput" placeholder="https://91appa.com
-https://www.yolo247.site
-https://20370.rajaluckme.com" style="
-width:100%;
-height:120px;
-padding:10px 12px;
-border:1px solid #dee2e6;
-border-radius:6px;
-font-size:0.95rem;
-resize:none;
-overflow-y:auto;
-"></textarea>
-                    </div>
-                    <button id="searchBtn">Search</button>
-                    <div id="searchResult" class="search-result" style="display:none;"></div>
-                </div>
-                <div>
-                    <h2>File Rename</h2>
-                    <div class="form-group">
-                        <label for="renameSearchInput">Search by filename</label>
-                        <input type="text" id="renameSearchInput" placeholder="Enter filename to search..." />
-                    </div>
-                    <button id="renameSearchBtn">Search</button>
-                    <div id="renameSearchResult" style="display:none; margin-top:12px;"></div>
-                </div>
-            </section>
-        </div>
         <footer style="text-align:center; margin-bottom: 20px; color:var(--text-muted); font-size:0.85rem;">
             Powered by Shashank Sharma
         </footer>
     </div>
 
-    <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-
-    <!-- Your custom JS -->
     <script type="module" src="script.js"></script>
 </body>
 
